@@ -485,13 +485,10 @@ function toStringList(arr) {
  */
 function sortCitiesArray(arr) {
   return arr.sort((a, b) => {
-    if (a > b) {
-      return 1;
+    if (a.country === b.country) {
+      return a.city < b.city ? -1 : 1;
     }
-    if (a < b) {
-      return -1;
-    }
-    return 0;
+    return a.country < b.country ? -1 : 1;
   });
 }
 
@@ -513,8 +510,21 @@ function sortCitiesArray(arr) {
  *           [0,0,0,1,0],
  *           [0,0,0,0,1]]
  */
-function getIdentityMatrix(/* n */) {
-  throw new Error('Not implemented');
+function getIdentityMatrix(n) {
+  const result = [];
+  let counter = 0;
+  const arr = new Array(n);
+  arr.fill(0, 0, arr.length);
+  arr.map((item, index) => {
+    const buffer = new Array(n).fill(0, 0, arr.length);
+    if (index === counter) {
+      buffer[index] += 1;
+    }
+    result.push(buffer);
+    counter += 1;
+    return counter;
+  });
+  return result;
 }
 
 /**
@@ -530,8 +540,14 @@ function getIdentityMatrix(/* n */) {
  *     0, 100 => [ 0, 1, 2, ..., 100 ]
  *     3, 3   => [ 3 ]
  */
-function getIntervalArray(/* start, end */) {
-  throw new Error('Not implemented');
+function getIntervalArray(start, end) {
+  const res = new Array(end - start + 1);
+  res.fill(start, 0, res.length);
+  res.map((item, index) => {
+    res[index] = start + index;
+    return res[index];
+  });
+  return res;
 }
 
 /**
@@ -545,8 +561,16 @@ function getIntervalArray(/* start, end */) {
  *   [ 'a', 'a', 'a', 'a' ]  => [ 'a' ]
  *   [ 1, 1, 2, 2, 3, 3, 4, 4] => [ 1, 2, 3, 4]
  */
-function distinct(/* arr */) {
-  throw new Error('Not implemented');
+function distinct(arr) {
+  const res = [];
+  arr.sort((a, b) => a - b);
+  arr.map((item, index) => {
+    if (res.length === 0 || arr[index] !== arr[index - 1]) {
+      res.push(item);
+    }
+    return res;
+  });
+  return res;
 }
 
 /**
