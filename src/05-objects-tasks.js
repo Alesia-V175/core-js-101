@@ -121,33 +121,81 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  res: '',
+  position: 0,
+  repeatError: 'Element, id and pseudo-element should not occur more then one time inside the selector',
+  posError: 'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element',
+
+  validatePosition(position) {
+    if (this.position === position && [1, 2, 6].includes(position)) {
+      throw new Error(this.repeatError);
+    }
+
+    if (this.position > position) {
+      throw new Error(this.posError);
+    }
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    this.validatePosition(1);
+    const obj = { ...cssSelectorBuilder };
+    obj.res = this.res + value;
+    obj.position = 1;
+    return obj;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    this.validatePosition(2);
+    const obj = { ...cssSelectorBuilder };
+    obj.res = `${this.res}#${value}`;
+    obj.position = 2;
+    return obj;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    this.validatePosition(3);
+    const obj = { ...cssSelectorBuilder };
+    obj.res = `${this.res}.${value}`;
+    obj.position = 3;
+    return obj;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    this.validatePosition(4);
+    const obj = { ...cssSelectorBuilder };
+    obj.res = `${this.res}[${value}]`;
+    obj.position = 4;
+    return obj;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    this.validatePosition(5);
+    const obj = { ...cssSelectorBuilder };
+    obj.res = `${this.res}:${value}`;
+    obj.position = 5;
+    return obj;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    this.validatePosition(6);
+    const obj = { ...cssSelectorBuilder };
+    obj.res = `${this.res}::${value}`;
+    obj.position = 6;
+    return obj;
   },
+
+  stringify() {
+    const { res } = this;
+    this.res = '';
+    return res;
+  },
+
+  combine(selector1, combinator, selector2) {
+    const obj = { ...cssSelectorBuilder };
+    obj.res = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+    return obj;
+  },
+
 };
 
 
