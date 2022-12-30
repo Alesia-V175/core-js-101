@@ -277,8 +277,8 @@ function reverseString(str) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  return num.toString().split('').reverse().join('');
 }
 
 
@@ -302,8 +302,36 @@ function reverseInteger(/* num */) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const str = ccn.toString();
+  let sumNum = 0;
+  let endSum = 0;
+  if (str.length % 2 === 0) {
+    for (let i = 0; i < str.length; i += 2) {
+      if (str[i] * 2 > 9) {
+        sumNum += Number(str[i] * 2) - 9;
+      } else {
+        sumNum += Number(str[i]) * 2;
+      }
+    }
+
+    for (let j = 1; j < str.length; j += 2) {
+      endSum += Number(str[j]);
+    }
+  } else {
+    for (let i = 1; i < str.length; i += 2) {
+      if (str[i] * 2 > 9) {
+        sumNum += Number(str[i] * 2) - 9;
+      } else {
+        sumNum += Number(str[i]) * 2;
+      }
+    }
+
+    for (let j = 0; j < str.length; j += 2) {
+      endSum += Number(str[j]);
+    }
+  }
+  return (sumNum + endSum) % 10 === 0;
 }
 
 /**
@@ -320,8 +348,22 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+
+function countSum(num) {
+  const numStr = num.toString();
+  let sum = 0;
+  for (let j = 0; j < numStr.length; j += 1) {
+    sum += Number(numStr[j]);
+  }
+  return sum;
+}
+
+function getDigitalRoot(num) {
+  const res = countSum(num);
+  if (res > 9) {
+    return countSum(res);
+  }
+  return res;
 }
 
 
@@ -346,8 +388,18 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  if (str.length % 2 !== 0) {
+    return false;
+  }
+
+  let copyStr = str;
+  const allBrackets = /\{\}|\[\]|\(\)|<>/;
+  for (let i = 0; i < str.length; i += 1) {
+    copyStr = copyStr.replace(allBrackets, '');
+  }
+
+  return copyStr.length === 0;
 }
 
 
@@ -371,8 +423,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -388,8 +440,15 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  let res = '';
+  const arr = pathes.map((item) => item.split('/'));
+  arr[0].forEach((itemFirst, index) => {
+    if (arr.every((itemSecond) => itemSecond[index] === itemFirst)) {
+      res += `${itemFirst}/`;
+    }
+  });
+  return res;
 }
 
 
@@ -411,8 +470,28 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const res = [];
+  const matrixFirst = m1;
+  const matrixSecond = m2;
+
+  for (let i = 0; i < matrixFirst.length; i += 1) {
+    const rowArr = [];
+
+    for (let j = 0; j < matrixSecond[i].length; j += 1) {
+      let currSum = 0;
+
+      for (let k = 0; k < matrixSecond.length; k += 1) {
+        currSum += matrixFirst[i][k] * matrixSecond[k][j];
+      }
+
+      rowArr.push(currSum);
+    }
+
+    res.push(rowArr);
+  }
+
+  return res;
 }
 
 
@@ -446,8 +525,30 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  let winValue;
+
+  for (let i = 0; i < position[1].length; i += 1) {
+    if (position[0][i] === position[1][i]
+      && position[0][i] === position[2][i]) {
+      winValue = position[0][i];
+    }
+
+    if (position[i][0] === position[i][1]
+      && position[i][0] === position[i][2]) {
+      [winValue] = position[i];
+    }
+  }
+
+  if (position[0][0] === position[1][1] && position[0][0] === position[2][2]) {
+    [[winValue]] = position;
+  }
+
+  if (position[0][2] === position[2][0] && position[0][2] === position[1][1]) {
+    [, , [winValue]] = position;
+  }
+
+  return winValue;
 }
 
 
