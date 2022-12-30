@@ -152,8 +152,10 @@ function logger(func, logFunc) {
   return (...arg) => {
     const currString = `${func.name}(${JSON.stringify(arg).slice(1, -1)})`;
     logFunc(`${currString} starts`);
+
     const res = func(...arg);
     logFunc(`${currString} ends`);
+
     return res;
   };
 }
